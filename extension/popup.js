@@ -3,11 +3,17 @@ const api = globalThis.browser || globalThis.chrome;
 const $ = (id) => document.getElementById(id);
 let state;
 let busy = false;
+let refreshPending = false;
+let actionPending = null;
 let editing = false;
 let selectedSite = "x";
 function message(text, error = false) { $("message").textContent = text; $("message").classList.toggle("error", error); }
 async function send(type, settings) {
-  if (busy) return;
+  if (busy) {
+    if (type === "GET") refreshPending = true;
+    else actionPending = { type, settings };
+    return;
+  }
   busy = true;
   render();
   try {
@@ -18,7 +24,16 @@ async function send(type, settings) {
     else if (type !== "GET") message(type === "STOP" ? "閉じました。使用済みの回数は戻りません。" : `${selectedSite === "x" ? "Xのおすすめ" : "Instagramのリール"}を解放しました。`);
     if (!editing) { $("minutes").value = state.settings.minutes; $("sessions").value = state.settings.sessions; }
   } catch (error) { message(error.message, true); }
-  finally { busy = false; render(); }
+  finally {
+    busy = false;
+    render();
+    const action = actionPending;
+    actionPending = null;
+    if (action || refreshPending) {
+      refreshPending = false;
+      send(action?.type || "GET", action?.settings);
+    }
+  }
 }
 function render() {
   for (const site of ["x", "instagram"]) {

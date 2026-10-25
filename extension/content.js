@@ -6,6 +6,8 @@
   if (!site || window.top !== window) return;
   let state = null;
   let busy = false;
+  let refreshPending = false;
+  let actionPending = null;
   let errorText = "";
   let host, shadow;
   let queued = false;
@@ -156,7 +158,11 @@
     }
   }
   async function command(type) {
-    if (busy) return;
+    if (busy) {
+      if (type === "GET") refreshPending = true;
+      else actionPending = type;
+      return;
+    }
     busy = true;
     enforce();
     try {
@@ -171,6 +177,12 @@
     } finally {
       busy = false;
       enforce();
+      const action = actionPending;
+      actionPending = null;
+      if (action || refreshPending) {
+        refreshPending = false;
+        command(action || "GET");
+      }
     }
   }
   function schedule() {

@@ -3,21 +3,25 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const core = require("../extension/core.js");
-function worker(saved = {}) {
+function worker(saved = {}, reorder = false) {
   let listener;
+  let writes = 0;
   const store = structuredClone(saved), alarms = new Map();
+  const reverseKeys = (value) => value && typeof value === "object"
+    ? Object.fromEntries(Object.entries(value).reverse().map(([key, item]) => [key, reverseKeys(item)]))
+    : value;
   const ignore = { addListener() {} };
   const browser = {
     runtime: { id: "test", onMessage: { addListener(fn) { listener = fn; } }, onStartup: ignore, onInstalled: ignore },
     storage: { local: {
-      async get(key) { await new Promise((r) => setTimeout(r, 1)); return { [key]: structuredClone(store[key]) }; },
-      async set(value) { Object.assign(store, structuredClone(value)); }
+      async get(key) { await new Promise((r) => setTimeout(r, 1)); return { [key]: reorder ? reverseKeys(store[key]) : structuredClone(store[key]) }; },
+      async set(value) { writes++; Object.assign(store, structuredClone(value)); }
     } },
     alarms: { onAlarm: ignore, async get(key) { return alarms.get(key); }, async create(key, value) { alarms.set(key, { scheduledTime: value.when }); }, async clear(key) { alarms.delete(key); } }
   };
   const context = vm.createContext({ browser, FeedWindowCore: core, console });
   vm.runInContext(fs.readFileSync(require.resolve("../extension/background.js"), "utf8"), context);
-  return { store, alarms, send(message) { return new Promise((resolve) => listener({ channel: "feed-window", site: "x", ...message }, { id: "test" }, resolve)); } };
+  return { store, alarms, writes() { return writes; }, send(message) { return new Promise((resolve) => listener({ channel: "feed-window", site: "x", ...message }, { id: "test" }, resolve)); } };
 }
 test("simultaneous starts across tabs consume one slot, and survive a worker restart", async () => {
   let background = worker();
@@ -48,4 +52,11 @@ test("each service has its own allowance, with a single earliest-expiry alarm", 
   await background.send({ type: "STOP", site: "x" });
   assert.equal((await background.send({ type: "GET", site: "instagram" })).state.active, true);
   assert.equal(background.alarms.size, 1);
+});
+test("GET does not write again when browser storage reorders object keys", async () => {
+  const background = worker({}, true);
+  await background.send({ type: "START" });
+  const before = background.writes();
+  for (let i = 0; i < 5; i++) await background.send({ type: "GET" });
+  assert.equal(background.writes(), before);
 });

@@ -11,9 +11,15 @@ function dispatch(message) {
     const raw = (await api.storage.local.get(KEY))[KEY];
     const state = core.transition(raw, message);
     // GET persists only meaningful changes, avoiding a storage event feedback loop.
-    const comparable = (value) => value && JSON.stringify({ ...value, pools: Object.fromEntries(
-      core.SITES.map((site) => [site, { ...value.pools?.[site], lastSeen: 0 }])
-    ) });
+    // Browser storage can reorder object keys. Compare explicit fields so a GET
+    // cannot cause another write/event merely because serialization order changed.
+    const comparable = (value) => value && JSON.stringify([
+      value.version, value.settings?.minutes, value.settings?.sessions,
+      ...core.SITES.map((site) => {
+        const pool = value.pools?.[site];
+        return [pool?.day, pool?.used, pool?.activeUntil];
+      })
+    ]);
     if (message.type !== "GET" || comparable(raw) !== comparable(state)) {
       await api.storage.local.set({ [KEY]: state });
     }

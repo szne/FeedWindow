@@ -4,7 +4,7 @@
   "private": true,
   "description": "A small daily window for X For You and Instagram Reels.",
   "scripts": {
-    "test": "node --test tests/core.test.cjs tests/background.test.cjs tests/publication.test.cjs",
+    "test": "node --test tests/core.test.cjs tests/background.test.cjs tests/content.test.cjs tests/publication.test.cjs",
     "test:browser": "playwright test",
     "package:chrome": "node scripts/package-chrome.cjs",
     "build:safari": "bash scripts/build-safari.sh",
