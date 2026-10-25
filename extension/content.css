@@ -1,0 +1,31 @@
+/* The state is set synchronously at document_start, before the first timeline. */
+html[data-fw-x="blocked"] [data-testid="primaryColumn"],
+html[data-fw-x="blocked"] [data-testid="primaryColumn"] * {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+html[data-fw-ig="blocked"] main,
+html[data-fw-ig="blocked"] main *,
+html[data-fw-ig="blocked"] [role="main"],
+html[data-fw-ig="blocked"] [role="main"] *,
+html[data-fw-ig="blocked"] [role="dialog"],
+html[data-fw-ig="blocked"] [role="dialog"] *,
+html[data-fw-ig="blocked"] video {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+html[data-fw-locked="true"] a[data-fw-reel],
+html[data-fw-locked="true"] a[data-fw-reel] *,
+html[data-fw-locked="true"] article[data-fw-reel],
+html[data-fw-locked="true"] article[data-fw-reel] * {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#feed-window-root {
+  all: initial !important;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}

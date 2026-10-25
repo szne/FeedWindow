@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Feed Window",
+  "version": "0.1.0",
+  "description": "XのおすすめとInstagramリールを、決めた時間と回数だけ。初期設定は1回5分・1日3回。",
+  "permissions": ["storage", "alarms"],
+  "host_permissions": ["https://*.x.com/*", "https://*.twitter.com/*", "https://*.instagram.com/*"],
+  "background": {"scripts": ["core.js", "background.js"], "persistent": false},
+  "action": {
+    "default_title": "Feed Window",
+    "default_popup": "popup.html",
+    "default_icon": {"16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png"}
+  },
+  "icons": {"48": "icons/icon-48.png", "128": "icons/icon-128.png", "256": "icons/icon-256.png", "512": "icons/icon-512.png"},
+  "content_scripts": [{
+    "matches": ["https://*.x.com/*", "https://*.twitter.com/*", "https://*.instagram.com/*"],
+    "js": ["targets.js", "content.js"],
+    "css": ["content.css"],
+    "run_at": "document_start"
+  }],
+  "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"}
+}

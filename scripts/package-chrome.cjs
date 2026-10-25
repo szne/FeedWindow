@@ -1,0 +1,11 @@
+const fs = require("node:fs");
+const path = require("node:path");
+const root = path.resolve(__dirname, "..");
+const destination = path.join(root, "dist/chrome");
+fs.mkdirSync(path.dirname(destination), { recursive: true });
+fs.cpSync(path.join(root, "extension"), destination, { recursive: true });
+const manifestPath = path.join(destination, "manifest.json");
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+manifest.background = { service_worker: "background.js" };
+fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
+console.log(`Chrome extension: ${destination}`);

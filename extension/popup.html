@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Feed Window</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <header><span class="logo" aria-hidden="true">◷</span><div><strong>Feed Window</strong><span class="eyebrow">スクロールに、小さな区切りを。</span></div><span class="version">v0.1</span></header>
+  <main>
+    <nav class="site-picker" aria-label="対象サービス"><button id="site-x" type="button" aria-pressed="true">𝕏 おすすめ</button><button id="site-instagram" type="button" aria-pressed="false">Instagram リール</button></nav>
+    <div class="label"><span class="dot"></span><span id="status">確認中</span><span id="date"></span></div>
+    <section class="window" aria-label="今日の解放枠">
+      <p id="hero-label">今日の残り</p><div class="hero"><strong id="remaining">—</strong><span id="unit">回</span></div>
+      <div id="slots" aria-hidden="true"></div>
+      <p id="summary">初期設定は5分 × 3回 / 日</p>
+      <button id="start" class="primary" disabled>5分だけ見る</button>
+      <button id="stop" class="secondary" hidden>今すぐ閉じる</button>
+    </section>
+    <p class="targets">X・Instagram、それぞれに独立した解放枠。</p>
+    <details id="settings-panel"><summary>時間と回数を変更<span aria-hidden="true">⌄</span></summary>
+      <form id="settings-form">
+        <div class="fields"><label>1回あたり<div><input id="minutes" type="number" min="1" max="120" step="1" required inputmode="numeric"><span>分</span></div></label><span class="multiply">×</span><label>1日あたり<div><input id="sessions" type="number" min="1" max="30" step="1" required inputmode="numeric"><span>回</span></div></label></div>
+        <p class="hint">両サービス共通の設定です。変更は次の解放から適用。今日使った回数は保持されます。</p>
+        <button id="save" class="save" type="submit">設定を保存</button>
+      </form>
+    </details>
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+  <footer>各サービスの枠は、そのサービスの全タブで共有<br>毎日0時にリセット · 閉じている間も時間は進みます</footer>
+  <script src="popup.js"></script>
+</body></html>

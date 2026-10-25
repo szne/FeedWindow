@@ -1,0 +1,28 @@
+{
+  "name": "feed-window",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A small daily window for X For You and Instagram Reels.",
+  "scripts": {
+    "test": "node --test tests/core.test.cjs tests/background.test.cjs tests/publication.test.cjs",
+    "test:browser": "playwright test",
+    "package:chrome": "node scripts/package-chrome.cjs",
+    "build:safari": "bash scripts/build-safari.sh",
+    "check:publication": "node scripts/check-publication.cjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  },
+  "license": "MIT",
+  "author": "szne",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szne/FeedWindow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/szne/FeedWindow/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
