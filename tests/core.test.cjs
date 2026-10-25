@@ -81,3 +81,22 @@ test("X and Instagram have independent counts and unlocks", () => {
   assert.equal(core.view(state, "instagram", start + 40_000).active, true);
   assert.equal(core.view(state, "instagram", start + 40_000).used, 1);
 });
+test("Instagram identifies clip permalinks separately from feeds and saved/DM contexts", () => {
+  for (const path of ["/reel/Abc_12-/", "/reels/Abc_12-", "/reel/Abc_12-"]) assert.equal(targets.reelId(path), "Abc_12-");
+  for (const path of ["/reels/", "/reels/audio/", "/reels/audio/123/", "/person/reels/", "/reels/create/", "/direct/t/123/"]) assert.equal(targets.reelId(path), null);
+  for (const path of ["/direct/inbox/", "/direct/t/123/", "/person/saved/", "/person/saved/all-posts/", "/person/saved/collection/123/", "/saved/", "/p/photo/"]) assert.equal(targets.instagramExempt(path), true);
+  for (const path of ["/", "/person/", "/reels/"]) assert.equal(targets.instagramExempt(path), false);
+});
+test("a single clip grant follows explicit entry, not automatic reel-to-reel navigation", () => {
+  let selected = targets.reelSelection(null, "/reel/one/");
+  assert.equal(selected.anchor, "one");
+  selected = targets.reelSelection(selected, "/reel/two/");
+  assert.equal(selected.anchor, "one");
+  selected = targets.reelSelection(selected, "/direct/t/123/");
+  assert.equal(selected.anchor, null);
+  selected = targets.reelSelection(selected, "/reels/three/");
+  assert.equal(selected.anchor, "three");
+  selected = targets.reelSelection(selected, "/reels/");
+  selected = targets.reelSelection(selected, "/reel/four/");
+  assert.equal(selected.anchor, null);
+});

@@ -14,6 +14,7 @@
   let lastPath = location.pathname;
   const html = document.documentElement;
   const isActive = () => !!state && state.activeUntil > Date.now() && state.day === localDay();
+  const instagram = site === "instagram" ? globalThis.FeedWindowInstagram(isActive) : null;
   function localDay() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -31,33 +32,25 @@
   function blocked() {
     if (isActive()) return false;
     if (site === "x") return /^\/home\/?$/.test(location.pathname) && !xFollowing();
-    return targets.isReel(location.pathname);
+    return instagram.blocked();
   }
   function setAttribute(name, value) {
     if (html.getAttribute(name) !== value) html.setAttribute(name, value);
   }
   function enforce() {
     const locked = !isActive();
-    const gate = blocked();
+    const gate = instagram ? instagram.update() : blocked();
     setAttribute("data-fw-locked", String(locked));
     setAttribute("data-fw-x", site === "x" && gate ? "blocked" : "open");
     setAttribute("data-fw-ig", site === "instagram" && gate ? "blocked" : "open");
-    if (site === "instagram" && locked) markInlineReels();
     if (gate || (site === "instagram" && locked)) pauseBlockedMedia();
     if (document.body) render(gate);
   }
-  function markInlineReels() {
-    document.querySelectorAll('a[href*="/reel/"]').forEach((link) => {
-      if (!targets.isReel(new URL(link.href, location.href).pathname)) return;
-      if (!link.hasAttribute("data-fw-reel")) link.setAttribute("data-fw-reel", "");
-      const article = link.closest("article");
-      if (article && !article.hasAttribute("data-fw-reel")) article.setAttribute("data-fw-reel", "");
-    });
-  }
   function shouldPause(video) {
+    if (instagram) return instagram.shouldPause(video);
     if (isActive()) return false;
     if (blocked()) return site === "instagram" || !!video.closest('[data-testid="primaryColumn"]');
-    return site === "instagram" && !!video.closest('[data-fw-reel]');
+    return false;
   }
   function pauseBlockedMedia() {
     document.querySelectorAll("video, audio").forEach((media) => {
@@ -89,6 +82,7 @@
         .timer{background:#f5f7f0;border:1px solid #dce5d8;border-radius:16px;box-shadow:0 6px 25px #0002;padding:12px 16px;display:flex;gap:16px;align-items:center}
         .timer strong{font-size:20px;font-variant-numeric:tabular-nums}.timer small{display:block;font-size:10px;letter-spacing:.08em;color:#607367}
         .timer button{font-size:12px;padding:8px 12px;min-height:36px}
+        .single{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;font-size:11px;line-height:1.6;color:#365646;background:#f5f7f0;border:1px solid #dce5d8;border-radius:12px;padding:10px 14px;box-shadow:0 4px 18px #0001}
         @media(prefers-reduced-motion:no-preference){button{transition:background .15s}button:hover:not(:disabled){background:#347355}}
         @media(max-width:600px){.gate{padding:28px 20px;border-radius:18px;margin:10px}h2{font-size:22px}}
       </style>
@@ -104,7 +98,8 @@
       <section class="timer" aria-label="Feed Window 解放中" hidden>
         <div><small>FEED WINDOW · 残り</small><strong></strong></div>
         <button type="button">今すぐ閉じる</button>
-      </section>`;
+      </section>
+      <section class="single" aria-label="Feed Window 個別再生" hidden>この動画はいつでも再生できます。<br>次のリールへのスクロールは停止中。</section>`;
     shadow.querySelector(".primary").addEventListener("click", () => command(state ? "START" : "GET"));
     shadow.querySelector(".timer button").addEventListener("click", () => command("STOP"));
     shadow.querySelector(".following").addEventListener("click", () => {
@@ -120,14 +115,16 @@
     if (el.textContent !== value) el.textContent = value;
   }
   function render(gate) {
-    if (!gate && !isActive()) {
+    const selected = instagram?.single();
+    if (!gate && !isActive() && !selected) {
       if (host) host.style.setProperty("display", "none", "important");
       return;
     }
     ensureUI();
     host.style.setProperty("display", "block", "important");
     shadow.querySelector(".gate").hidden = !gate;
-    shadow.querySelector(".timer").hidden = gate;
+    shadow.querySelector(".timer").hidden = gate || !isActive();
+    shadow.querySelector(".single").hidden = gate || isActive() || !selected;
     if (gate) {
       const primary = site === "x" ? document.querySelector('[data-testid="primaryColumn"]') : document.querySelector('main, [role="main"]');
       const rect = primary?.getBoundingClientRect();
@@ -139,7 +136,7 @@
       host.style.setProperty("right", "auto", "important");
       const remaining = state?.day === localDay() ? state.remaining : state?.settings.sessions;
       text("h2", site === "x" ? "おすすめは、ひと休み。" : "リールは、ひと休み。");
-      text(".description", "見たいときだけ、時間を決めて開きましょう。");
+      text(".description", instagram ? "DM・保存した動画はいつでも。連続閲覧だけを時間で区切ります。" : "見たいときだけ、時間を決めて開きましょう。");
       text(".count", state ? `今日の残り ${remaining} / ${state.settings.sessions} 回` : "解放枠を確認しています");
       text(".primary", !state ? "接続を再確認" : remaining > 0 ? `${state.settings.minutes}分だけ見る` : "今日はここまで。また明日。");
       shadow.querySelector(".primary").disabled = busy || (!!state && remaining <= 0);
@@ -152,9 +149,11 @@
       host.style.setProperty("right", "20px", "important");
       host.style.setProperty("bottom", "20px", "important");
       host.style.setProperty("width", "auto", "important");
-      const seconds = Math.max(0, Math.ceil((state.activeUntil - Date.now()) / 1000));
-      text(".timer strong", `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`);
-      shadow.querySelector(".timer button").disabled = busy;
+      if (isActive()) {
+        const seconds = Math.max(0, Math.ceil((state.activeUntil - Date.now()) / 1000));
+        text(".timer strong", `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`);
+        shadow.querySelector(".timer button").disabled = busy;
+      }
     }
   }
   async function command(type) {

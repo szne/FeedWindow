@@ -14,12 +14,27 @@ html[data-fw-ig="blocked"] video {
   visibility: hidden !important;
   pointer-events: none !important;
 }
-html[data-fw-locked="true"] a[data-fw-reel],
-html[data-fw-locked="true"] a[data-fw-reel] *,
-html[data-fw-locked="true"] article[data-fw-reel],
-html[data-fw-locked="true"] article[data-fw-reel] * {
+html[data-fw-ig-inline="blocked"] a[data-fw-reel],
+html[data-fw-ig-inline="blocked"] a[data-fw-reel] *,
+html[data-fw-ig-inline="blocked"] article[data-fw-reel],
+html[data-fw-ig-inline="blocked"] article[data-fw-reel] * {
   visibility: hidden !important;
   pointer-events: none !important;
+}
+html[data-fw-ig-single="true"],
+html[data-fw-ig-single="true"] body,
+html[data-fw-ig-single="true"] [data-fw-reel-scroller] {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+}
+html[data-fw-ig-single="true"] video:not([data-fw-reel-current]) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+html[data-fw-ig-single="true"] [data-fw-reel-navigation] {
+  display: none !important;
 }
 #feed-window-root {
   all: initial !important;

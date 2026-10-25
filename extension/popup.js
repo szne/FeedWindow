@@ -41,6 +41,9 @@ function render() {
     $(`site-${site}`).disabled = busy;
   }
   if (!state) return;
+  document.querySelector(".targets").textContent = selectedSite === "instagram"
+    ? "DM・保存・個別動画はいつでも。連続閲覧だけを制限。"
+    : "X・Instagram、それぞれに独立した解放枠。";
   const ms = Math.max(0, state.activeUntil - Date.now());
   const active = ms > 0;
   document.body.classList.toggle("active", active);

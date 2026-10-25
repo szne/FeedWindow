@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF5BCD18ABEB02560F92E82C /* instagram.js in Resources */ = {isa = PBXBuildFile; fileRef = C4067E9E6712952D12FD924D /* instagram.js */; };
 		1CD99E36308E4F8E001E158D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD99E35308E4F8E001E158D /* AppDelegate.swift */; };
 		1CD99E3A308E4F8E001E158D /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CD99E38308E4F8E001E158D /* Main.html */; };
 		1CD99E3C308E4F8E001E158D /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD99E3B308E4F8E001E158D /* Icon.png */; };
@@ -54,6 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C4067E9E6712952D12FD924D /* instagram.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = instagram.js; path = ../../../extension/instagram.js; sourceTree = "<group>"; };
 		1CD99E32308E4F8E001E158D /* Feed Window.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Feed Window.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CD99E35308E4F8E001E158D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1CD99E39308E4F8E001E158D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				1CD99E66308E4F8F001E158D /* manifest.json */,
 				1CD99E67308E4F8F001E158D /* popup.css */,
 				1CD99E68308E4F8F001E158D /* content.js */,
+				C4067E9E6712952D12FD924D /* instagram.js */,
 			);
 			name = Resources;
 			path = "Feed Window Extension";
@@ -271,6 +274,7 @@
 				1CD99E6D308E4F8F001E158D /* popup.html in Resources */,
 				1CD99E6B308E4F8F001E158D /* core.js in Resources */,
 				1CD99E72308E4F8F001E158D /* content.js in Resources */,
+				BF5BCD18ABEB02560F92E82C /* instagram.js in Resources */,
 				1CD99E70308E4F8F001E158D /* manifest.json in Resources */,
 				1CD99E71308E4F8F001E158D /* popup.css in Resources */,
 				1CD99E69308E4F8F001E158D /* popup.js in Resources */,
@@ -451,7 +455,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 200;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -465,7 +469,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -485,7 +489,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 200;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -499,7 +503,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -522,7 +526,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 200;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -537,7 +541,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -563,7 +567,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 200;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -578,7 +582,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
