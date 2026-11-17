@@ -1,6 +1,6 @@
 # Security and publishing
 
-Feed Window is published as source code. Sign Safari builds on your own Mac with your own development identity. This repository does not distribute signing certificates, private keys, provisioning profiles, or signed app bundles.
+GitHub Releases hosts the notarized Safari app for macOS. Sign local development builds with your own development identity. Keep signing certificates, private keys, provisioning profiles, and local builds out of the Git history.
 
 ## Files that stay local
 

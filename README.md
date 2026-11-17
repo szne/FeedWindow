@@ -2,7 +2,7 @@
 
 Xの「おすすめ」とInstagramリールの連続閲覧を、決めた時間と回数だけ使えるようにするSafari Web Extensionです。初期設定は **1回5分 × 1日3回、サービスごとに独立**。ボタンを押したときだけ、そのサービスを解放します。
 
-Mac版Safari向けの開発版です。共通の拡張ソースからChrome向けにも梱包できます。
+macOSのSafari向けの拡張機能です。共通の拡張ソースからChrome向けにも梱包できます。
 
 <img src="docs/screenshots/popup.png" width="340" alt="サービスの選択、残り回数、時間と回数の設定画面">
 
@@ -20,6 +20,15 @@ Mac版Safari向けの開発版です。共通の拡張ソースからChrome向�
 - 設定と使用回数はブラウザ内に保存します。外部サーバー・解析・アカウント登録はありません。
 
 ## Safariで使う
+
+配布版はApple Silicon搭載のMac（macOS 13以降）向けです。Developer IDで署名し、Appleの公証を受けています。
+
+1. [GitHub Releases](https://github.com/szne/FeedWindow/releases/latest) からApple Silicon向けのZIPをダウンロードします。
+2. ZIPを解凍し、`Feed Window.app` を「アプリケーション」フォルダへ移動して開きます。
+3. Safariの「設定 → 拡張機能」でFeed Windowを有効にし、`x.com` と `instagram.com` へのアクセスを許可します。旧ドメインを使う場合は `twitter.com` も許可します。
+4. 対象ページを再読み込みします。
+
+### ソースからビルド
 
 必要なもの：macOS、Xcodeとコマンドラインツール、Node.js 20以降。
 
@@ -51,7 +60,7 @@ Xcodeで設定する場合は、`safari/Feed Window/Feed Window.xcodeproj` を�
 
 生成した署名設定は `work/Signing.generated.xcconfig` に置き、Gitから除外します。秘密鍵はmacOSの署名ツール経由で使用し、スクリプトから書き出しません。署名・ビルドのログにも個人の署名情報が出る場合があるため、ログは公開対象にしません。[公開時の注意](SECURITY.md)
 
-App Store配布やDeveloper IDによる通常配布・公証は、このプロジェクトのビルドフローには含まれません。詳しくは[Appleの実行手順](https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension)を参照してください。
+上記のスクリプトは、開発用のビルドを作成します。詳しくは[Appleの実行手順](https://developer.apple.com/documentation/safariservices/running-your-safari-web-extension)を参照してください。
 
 ### 一時的な読み込み
 
@@ -122,7 +131,7 @@ dist/                ビルド結果（Git管理外）
 - Xはホームの「おすすめ」が対象で、検索やサイドバーのおすすめユーザーは対象外です。
 - Instagramでリールへのリンクがない動画など、通常投稿と区別できない表示形式は識別できない場合があります。個別再生のスクロール・ナビゲーション制御もDOMとURLの変化を使います。
 - サイトのDOM変更、表示言語、A/Bテストによって判定の調整が必要になることがあります。
-- Macアプリのビルドと開発用署名、Chromiumでのフィクスチャテストを確認しています。**Safariでの有効化と、ログイン済みの実サイトでの最終動作確認は未実施です。**
+- Macアプリのビルド、配布版の署名と公証、Chromiumでのフィクスチャテストを確認しています。**Safariでの有効化と、ログイン済みの実サイトでの最終動作確認は未実施です。**
 
 ## ライセンス
 
